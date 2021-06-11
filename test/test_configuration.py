@@ -16,6 +16,9 @@ class TestConfig(unittest.TestCase):
                            {'debug': 'False',
                             'dropbox_key': "'some_randon_key_here'",
                             'log_file': '/var/log/',
-                            'sqlite_path': 'data/SQLite/photophixer.db'}
+                            'sqlite_path': 'data/SQLite/photophixer.db',
+                            'db_engine': 'sqlite',
+                            'temp_path': '/tmp/',
+                            'dropbox_photo_path': '/Camera Uploads/'}
                        }
         self.assertDictEqual(self.configuration.list_config(), config_dict)
