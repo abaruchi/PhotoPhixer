@@ -5,7 +5,11 @@ from pony.orm import (Database, Optional, PrimaryKey, Required, Set)
 
 
 def create_connection(config: SysConfig) -> Database:
-    return Database(config.db_engine, str(config.db_file), create_db=True)
+    config_dict = config.list_config()
+    return Database(
+        config_dict['GLOBAL']['db_engine'],
+        config_dict['GLOBAL']['sqlite_path'],
+        create_db=True)
 
 
 class File(create_connection.Entity):
