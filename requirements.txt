@@ -1,2 +1,4 @@
 dropbox == 11.10.0
 exif == 1.2.2
+pony ~= 0.7.9
+configparser ==5.0.2
