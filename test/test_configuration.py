@@ -12,13 +12,13 @@ class TestConfig(unittest.TestCase):
 
     def test_config_dict(self):
         config_dict = {'DEFAULT': {},
-                       'GLOBAL':
-                           {'debug': 'False',
-                            'dropbox_key': "'some_randon_key_here'",
-                            'log_file': '/var/log/',
-                            'sqlite_path': 'data/SQLite/photophixer.db',
-                            'db_engine': 'sqlite',
-                            'temp_path': '/tmp/',
-                            'dropbox_photo_path': '/Camera Uploads/'}
-                       }
+                       'DROPBOX': {'access_key': "some_key_here",
+                                   'device_dir_01': "'mobile_foo'",
+                                   'device_match_01': "'device01'",
+                                   'photo_path': '/Camera Uploads/'},
+                       'GLOBAL': {'db_engine': 'sqlite',
+                                  'debug': 'False',
+                                  'log_file': '/var/log/',
+                                  'sqlite_path': 'data/SQLite/photophixer.db',
+                                  'temp_path': '/tmp/'}}
         self.assertDictEqual(self.configuration.list_config(), config_dict)

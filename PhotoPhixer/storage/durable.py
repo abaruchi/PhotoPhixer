@@ -1,26 +1,33 @@
-from abc import ABC, abstractmethod
 from PhotoPhixer.storage.SQLite import models
 from PhotoPhixer.common.config import SysConfig
+import hashlib
 
 
-class Durable(ABC):
+def generate_pk(file_path: str) -> str:
+    """
+    Generates a string that represents the md5 hash of filename
+    :param file_path: The file path in Dropbox to create the hash
+    :return: MD5 hash to use as PK to store locally
+    """
+    file_path_md5 = hashlib.md5(file_path.encode())
+    return file_path_md5.hexdigest()
 
-    @abstractmethod
-    def get_file(self, file_name: str, conf: SysConfig) -> dict:
+
+class Durable(object):
+
+    def get_file(self, file_name: str, conf: SysConfig, db) -> dict:
         pass
 
-    @abstractmethod
-    def store_file(self, file_data: dict, conf: SysConfig) -> None:
+    def store_file(self, file_data: dict, conf: SysConfig, db) -> None:
         pass
 
-    @abstractmethod
-    def list_all_files(self, conf: SysConfig) -> dict:
+    def list_all_files(self, conf: SysConfig, db) -> dict:
         pass
 
 
 class SQLiteStore(Durable):
 
-    def get_file(self, file_name: str, conf: SysConfig) -> dict:
+    def get_file(self, file_name: str, conf: SysConfig, db: ) -> dict:
         pass
 
     def store_file(self, file_data: dict, conf: SysConfig) -> None:
@@ -28,7 +35,3 @@ class SQLiteStore(Durable):
 
     def list_all_files(self, conf: SysConfig) -> dict:
         pass
-
-
-def interface_create(interface_type: str) -> Durable:
-    pass

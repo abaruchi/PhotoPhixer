@@ -1,10 +1,15 @@
 from datetime import datetime
 
-from PhotoPhixer.common.config import SysConfig
+from PhotoPhixer.common.config import main_config, SysConfig
 from pony.orm import (Database, Optional, PrimaryKey, Required, Set)
 
 
-def create_connection(config: SysConfig) -> Database:
+def create_db_connection(config: SysConfig) -> Database:
+    """
+
+    :param config:
+    :return:
+    """
     config_dict = config.list_config()
     return Database(
         config_dict['GLOBAL']['db_engine'],
@@ -12,7 +17,9 @@ def create_connection(config: SysConfig) -> Database:
         create_db=True)
 
 
-class File(create_connection.Entity):
+
+
+class File(create_db_connection.Entity):
     id = PrimaryKey(str)
     name = Optional(str)
     file_type = Optional(str)
@@ -25,7 +32,7 @@ class File(create_connection.Entity):
     directory = Optional('Directory')
 
 
-class Directory(create_connection.Entity):
+class Directory(db.Entity):
     id = PrimaryKey(str)
     path = Required(str)
     date_creation = Required(datetime)
@@ -33,4 +40,4 @@ class Directory(create_connection.Entity):
     files = Set(File)
 
 
-create_connection.generate_mapping(create_tables=True)
+db.generate_mapping(create_tables=True)
