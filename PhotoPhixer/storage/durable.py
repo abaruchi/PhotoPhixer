@@ -1,8 +1,7 @@
 import datetime
 import hashlib
 
-from PhotoPhixer.common.config import SysConfig
-from pony.orm import Database
+from pony.orm import Database, desc
 
 
 def generate_pk(file_name: str) -> str:
@@ -21,7 +20,6 @@ class Durable(object):
         """
 
         :param file_name:
-        :param conf:
         :param db:
         :return:
         """
@@ -33,7 +31,6 @@ class Durable(object):
 
         :param force_update:
         :param file_data:
-        :param conf:
         :param db:
         :return:
         """
@@ -42,7 +39,6 @@ class Durable(object):
     def list_all_files(self, db: Database) -> dict:
         """
 
-        :param conf:
         :param db:
         :return:
         """
@@ -55,7 +51,7 @@ class SQLiteStore(Durable):
         if db.File.exists(name=file_name):
             stored_file = db.File.get(name=file_name)
             return stored_file.to_dict()
-        null_file = stored_file = db.File.get(name='None')
+        null_file = db.File.get(name='None')
         return null_file.to_dict()
 
     def store_file(self, file_data: dict, db: Database,
@@ -63,7 +59,7 @@ class SQLiteStore(Durable):
         file_id = generate_pk(file_data['name'])
 
         if db.File.exists(id=file_id) and not force_update:
-           pass
+            return
 
         else:
             file_to_store = db.File(
@@ -78,9 +74,40 @@ class SQLiteStore(Durable):
                 dropbox_hash=file_data['dropbox_hash'],
                 directory=file_data['directory'])
 
-
-
-            )
-
     def list_all_files(self, db: Database) -> dict:
-        pass
+
+        all_files_dict = dict()
+
+        stored_files = db.Files.select().order_by(desc(
+            db.Files.date_file_creation))
+
+        files_count = len(stored_files)
+        all_files_dict['Meta']['count'] = files_count
+
+        for file in files_count:
+            file_id = file.id
+            all_files_dict['Files'][file_id] = dict()
+            all_files_dict['Files'][file_id] = file.to_dic()
+            del(all_files_dict['Files'][file_id]['id'])
+
+        return all_files_dict
+
+    def create_directory(self, dir_data: dict, db: Database) -> None:
+        """
+        This method creates directory structure into Database to be associated
+        with files.
+        :param dir_data: A dict with necessary information to create the dir
+        :param db: A db connection to the datastore
+        :return: None
+        """
+
+        dir_id = generate_pk(dir_data['path'])
+        if not db.Directory.exists(id=dir_id):
+
+            dir_to_store = db.Directory(
+                id=dir_id,
+                path=dir_data['path'],
+                date_creation=dir_data['date_creation'],
+                date_last_update=dir_data['date_last_update']
+            )
+        return
