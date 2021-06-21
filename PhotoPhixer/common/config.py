@@ -1,6 +1,6 @@
+from configparser import ConfigParser
 from os import getcwd
 from pathlib import Path
-from configparser import ConfigParser
 
 
 class SysConfig(object):
@@ -24,7 +24,3 @@ class SysConfig(object):
                 all_config[section][conf] = value
 
         return all_config
-
-
-# This instantiation acts like a Singleton
-main_config = SysConfig()
