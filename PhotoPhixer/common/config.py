@@ -9,7 +9,6 @@ class SysConfig(object):
         self.config_file = config_file
 
         if not self.config_file.exists():
-            print(self.config_file)
             raise FileNotFoundError
         self.cp = ConfigParser()
 
