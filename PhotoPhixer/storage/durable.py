@@ -62,7 +62,7 @@ class SQLiteStore(Durable):
             return
 
         else:
-            file_to_store = db.File(
+            db.File(
                 id=file_id,
                 name=file_data['name'],
                 file_type=file_data['file_type'],
@@ -73,6 +73,7 @@ class SQLiteStore(Durable):
                 date_last_change=datetime.datetime.now(),
                 dropbox_hash=file_data['dropbox_hash'],
                 directory=file_data['directory'])
+        return
 
     def list_all_files(self, db: Database) -> dict:
 
@@ -103,8 +104,7 @@ class SQLiteStore(Durable):
 
         dir_id = generate_pk(dir_data['path'])
         if not db.Directory.exists(id=dir_id):
-
-            dir_to_store = db.Directory(
+            db.Directory(
                 id=dir_id,
                 path=dir_data['path'],
                 date_creation=dir_data['date_creation'],
