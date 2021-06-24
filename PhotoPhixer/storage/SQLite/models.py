@@ -1,8 +1,7 @@
 from datetime import datetime
-from os import getcwd
 from pathlib import Path
 
-from pony.orm import Database, Optional, PrimaryKey, Required, Set
+from pony.orm import Database, Optional, PrimaryKey, Required, Set, db_session
 
 from PhotoPhixer.common.config import SysConfig
 
@@ -15,7 +14,7 @@ def db_connection(config: SysConfig) -> Database:
     :return: A database connection to handle data
     """
     config_dict = config.list_config()
-    sqlite_path = Path(getcwd()) / config_dict['GLOBAL']['sqlite_path']
+    sqlite_path = Path(config_dict['GLOBAL']['sqlite_path'])
 
     db = Database(
         config_dict['GLOBAL']['db_engine'],
@@ -47,6 +46,7 @@ def db_connection(config: SysConfig) -> Database:
     return db
 
 
+@db_session
 def add_null_objects(db: Database) -> None:
     """
     This routine creates null objects into Database so we can return these
@@ -67,6 +67,6 @@ def add_null_objects(db: Database) -> None:
             id='None',
             path='None',
             date_creation=datetime.now(),
-            last_update=datetime.now(),
+            date_last_update=datetime.now(),
             files=null_file
         )
