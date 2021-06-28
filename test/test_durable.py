@@ -1,4 +1,5 @@
 import unittest
+import uuid
 from datetime import datetime
 from os import getcwd
 from pathlib import Path
@@ -27,24 +28,52 @@ class TestDurableSQLite(unittest.TestCase):
 
         :return:
         """
-        datetime_dir_01 = datetime(year=2020,
-                                   month=1,
-                                   day=1,
-                                   hour=10,
-                                   minute=00,
-                                   second=00,
-                                   microsecond=00)
+        dir_path = '/Camera Uploads/' + uuid.uuid4().hex.upper()[0:6]
+        datetime_dir = datetime(year=2020,
+                                month=1,
+                                day=1,
+                                hour=10,
+                                minute=00,
+                                second=00,
+                                microsecond=00)
         dir_01 = {
-            'path': '/Camera Uploads/Device_01/',
-            'date_creation': datetime_dir_01,
-            'date_last_update': datetime_dir_01
+            'path': dir_path,
+            'date_creation': datetime_dir,
+            'date_last_update': datetime_dir
         }
-
         self.durable.create_directory(dir_01, self.db_conn)
         self.assertTrue(self.db_conn.Directory.exists(path=dir_01['path']))
 
+    @db_session
     def test_get_file(self):
-        pass
+        """
+
+        :return:
+        """
+        datetime_file = datetime(year=2020,
+                                 month=1,
+                                 day=1,
+                                 hour=10,
+                                 minute=00,
+                                 second=00,
+                                 microsecond=00)
+
+        file_name = uuid.uuid4().hex.upper()[0:6]
+        file_01 = {
+            'name': file_name,
+            'file_type': 'photo',
+            'device': 'device01',
+            'has_metadata': 'True',
+            'date_processing': datetime_file,
+            'date_file_creation': datetime_file,
+            'date_last_change': datetime_file,
+            'dropbox_hash': 'some_hash_here'
+        }
+        self.durable.store_file(file_01, self.db_conn)
+
+        self.assertEqual(
+            self.durable.get_file('Test_File_01', self.db_conn),
+            file_01['name'])
 
     def test_create_file(self):
         pass
