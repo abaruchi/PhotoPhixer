@@ -70,3 +70,23 @@ def add_null_objects(db: Database) -> None:
             date_last_update=datetime.now(),
             files=null_file
         )
+
+
+@db_session
+def add_device_directories(config: SysConfig, db: Database) -> None:
+    """
+
+    :param config:
+    :param db: Database connection
+    :return: None
+    """
+    dir_list = list()
+    config_dict = config.list_config()
+
+    for device_dir in config_dict['DROPBOX']:
+
+
+
+
+
+
