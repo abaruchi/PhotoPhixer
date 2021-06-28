@@ -19,6 +19,7 @@ class TestConfig(unittest.TestCase):
                        'GLOBAL': {'db_engine': 'sqlite',
                                   'debug': 'False',
                                   'log_file': '/var/log/',
-                                  'sqlite_path': 'data/SQLite/photophixer.db',
+                                  'sqlite_path': '/Users/abaruchi/Projects/Personal/PhotoPhixer/test/data/test_photophixer.db',
                                   'temp_path': '/tmp/'}}
         self.assertDictEqual(self.configuration.list_config(), config_dict)
+
